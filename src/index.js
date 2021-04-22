@@ -51,10 +51,10 @@ function onEntry(entries) {
             apiService.fetchImages().then(data => {
                 appendImgCardsMarkup(data);
 
-                // window.scrollBy({
-                //     top: window.innerHeight,
-                //     behavior: 'smooth',
-                // });
+                window.scrollBy({
+                    top: window.innerHeight,
+                    behavior: 'smooth',
+                });
             });
         };
     });
