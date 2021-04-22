@@ -7,7 +7,7 @@ import refs from './js/refs';
 const apiService = new ApiService();
 
 refs.searchForm.addEventListener('submit', onSearch);
-refs.loadMoreBtn.addEventListener('click', onLoadMore);
+// refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
 function onSearch(e) {
     e.preventDefault();
@@ -25,16 +25,16 @@ function onSearch(e) {
     });
 };
 
-function onLoadMore() {
-    apiService.fetchImages().then(data => {
-        appendImgCardsMarkup(data);
+// function onLoadMore() {
+//     apiService.fetchImages().then(data => {
+//         appendImgCardsMarkup(data);
 
-        window.scrollBy({
-            top: window.innerHeight,
-            behavior: 'smooth',
-        });
-    });
-};
+//         window.scrollBy({
+//             top: window.innerHeight,
+//             behavior: 'smooth',
+//         });
+//     });
+// };
 
 function appendImgCardsMarkup(images) {
     refs.gallery.insertAdjacentHTML('beforeend', imageCardTpl(images));
@@ -43,3 +43,27 @@ function appendImgCardsMarkup(images) {
 function clearGalleryContainer() {
     refs.gallery.innerHTML = '';
 };
+
+function onEntry(entries) {
+    entries.forEach(entry => {
+        console.log(entry);
+        if (entry.isIntersecting && apiService.query !== '') {
+            apiService.fetchImages().then(data => {
+                appendImgCardsMarkup(data);
+
+                // window.scrollBy({
+                //     top: window.innerHeight,
+                //     behavior: 'smooth',
+                // });
+            });
+        };
+    });
+};
+
+const options = {
+    rootMargin: '100px',
+}
+
+const observer = new IntersectionObserver(onEntry, options);
+
+observer.observe(refs.sentinel);
