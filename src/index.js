@@ -3,7 +3,7 @@ import '../node_modules/material-design-icons/iconfont/material-icons.css';
 import ApiService from './js/api-service';
 import imageCardTpl from './tamplates/image-card.hbs';
 import refs from './js/refs';
-import errorNotice from './js/notice';
+import { invalidQueryNotice, errorNotice } from './js/notice';
 import * as basicLightbox from 'basiclightbox';
 
 
@@ -13,16 +13,28 @@ refs.searchForm.addEventListener('submit', onSearch);
 
 function onSearch(e) {
     e.preventDefault();
-
-    apiService.query = e.currentTarget.elements.query.value;
-    if (apiService.query === '' || !apiService.query.trim()) {
-        return errorNotice();
-    };
     apiService.resetPage();
-    apiService.fetchImages().then(data => {
+    apiService.query = e.currentTarget.elements.query.value;
+
+    if (apiService.query === '' || !apiService.query.trim()) {
+        return invalidQueryNotice();
+    };
+
+    onSearchFetchImages();
+};
+
+async function onSearchFetchImages() {
+    try {
+        const result = await apiService.fetchImages();
+        if (result.length === 0) {
+            invalidQueryNotice();
+            return;
+        };
         clearGalleryContainer();
-        appendImgCardsMarkup(data);
-    }).catch(errorNotice);
+        appendImgCardsMarkup(result);
+    } catch (error) {
+        errorNotice();
+    };
 };
 
 function appendImgCardsMarkup(images) {
@@ -36,13 +48,15 @@ function clearGalleryContainer() {
 function onEntry(entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting && apiService.query !== '') {
-            apiService.fetchImages().then(data => {
-                appendImgCardsMarkup(data); 
-            });
+            onEntryFetchImages();
         };
     });
 };
 
+async function onEntryFetchImages() {
+    const result = await apiService.fetchImages();
+    appendImgCardsMarkup(result);
+};
 
 const observer = new IntersectionObserver(onEntry, {
     rootMargin: '100px',

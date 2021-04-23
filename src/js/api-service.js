@@ -7,7 +7,7 @@ export default class ApiService {
         this.page = 1;
     }
     
-    fetchImages() {
+    async fetchImages() {
         const searchParams = new URLSearchParams({
             image_type: 'photo',
             orientation: 'horizontal',
@@ -16,18 +16,17 @@ export default class ApiService {
             per_page: '12',
             key: API_KEY,
         });
-        
-        return fetch(`${BASE_URL}/?${searchParams}`)
-            .then(r => r.json())
-            .then(({ hits }) => {
-                this.incrementPage();
 
-                if (hits.length === 0) {
-                    throw hits;
-                }
+        const responce = await fetch(`${BASE_URL}/?${searchParams}`);
 
-                return hits;
-            });
+        if (!responce.ok) {
+            throw responce;
+        };
+
+        const data = await responce.json();
+        this.incrementPage();
+
+        return data.hits;
     };
 
     incrementPage() {
