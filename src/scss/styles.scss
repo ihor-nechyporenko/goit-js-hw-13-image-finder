@@ -1,3 +1,5 @@
+@import '../../node_modules/basiclightbox/src/styles/main.scss';
+
 html {
   box-sizing: border-box;
 }
@@ -6,6 +8,11 @@ html {
 *::before,
 *::after {
   box-sizing: inherit;
+}
+
+body {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 18px;
 }
 
 img {
@@ -44,6 +51,22 @@ ul {
 
 .stats {
   display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.stats-item {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+
+  @media screen and (min-width: 1200px) {
+    flex-direction: column;
+  }
+}
+
+.stats > .stats-item:not(:last-child) {
+  margin-right: 12px;
 }
 
 .gallery {
@@ -55,6 +78,12 @@ ul {
 }
 
 .image-card {
+  margin-bottom: 15px;
+
+  -webkit-box-shadow: 5px 5px 8px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 5px 5px 8px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 8px 0px rgba(0, 0, 0, 0.5);
+
   @media screen and (min-width: 768px) {
     width: calc((100% - 4 * 15px) / 2);
     margin: 15px;
@@ -63,4 +92,57 @@ ul {
   @media screen and (min-width: 1200px) {
     width: calc((100% - 8 * 15px) / 4);
   }
+}
+
+input {
+  width: 100%;
+  margin: 20px 10px 20px 0;
+  padding-left: 10px;
+
+  font-family: 'Roboto Mono', monospace;
+  font-size: 18px;
+  line-height: 2;
+
+  @media screen and (min-width: 768px) {
+    width: 40%;
+  }
+
+  @media screen and (min-width: 1200px) {
+    width: 40%;
+  }
+}
+
+input::placeholder {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 18px;
+}
+
+.search-form {
+  display: flex;
+
+  @media screen and (min-width: 768px) {
+    justify-content: center;
+  }
+}
+
+button[data-action='search'] {
+  margin: 20px 0;
+
+  font-family: 'Roboto Mono', monospace;
+  font-size: 18px;
+  line-height: 2;
+}
+
+button[data-action='search']:hover,
+button[data-action='search']:focus {
+  cursor: pointer;
+}
+
+.image-item {
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-item:hover {
+  transform: scale(1.03);
+  cursor: zoom-in;
 }
