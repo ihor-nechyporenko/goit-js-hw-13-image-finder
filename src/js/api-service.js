@@ -8,7 +8,16 @@ export default class ApiService {
     }
     
     fetchImages() {
-        return fetch(`${BASE_URL}/?image_type=photo&orientation=horizontal&q=${this.query}&page=${this.page}&per_page=12&key=${API_KEY}`)
+        const searchParams = new URLSearchParams({
+            image_type: 'photo',
+            orientation: 'horizontal',
+            q: this.query,
+            page: this.page,
+            per_page: '12',
+            key: API_KEY,
+        });
+        
+        return fetch(`${BASE_URL}/?${searchParams}`)
             .then(r => r.json())
             .then(({ hits }) => {
                 this.incrementPage();
@@ -21,19 +30,11 @@ export default class ApiService {
             });
     };
 
-    // get searchQuery() {
-    //     return this.query;
-    // };
-
-    // set searchQuery(newQuery) {
-    //     this.query = newQuery;
-    // };
-
     incrementPage() {
         this.page += 1;
     };
 
     resetPage() {
         this.page = 1;
-    }
+    };
 }
